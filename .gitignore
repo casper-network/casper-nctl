@@ -1,0 +1,39 @@
+### Node ###
+# Logs
+logs
+*.log
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# vscode
+.vscode/
+.dccache
+
+# NCTL transient assets
+/assets
+/remotes
+/stages
+/dumps
+/tmp
+/overrides
+
+# OS X
+.DS_Store
+
+# sw* files in vim
+.*.sw*
+
+# disk use reports
+**/disk_use_report.csv
+
+# index files for VSCode
+.lh/*
+
+*.patch
