@@ -19,7 +19,7 @@ be `dev` (or your working branch recently forked from `dev`) for casper-node and
 casper-node-launcher.
 
 To find out which branch of the client and launcher are compatible with the current branch of node, refer to
-[ci.json](https://github.com/casper-network/casper-node/blob/dev/utils/nctl/ci/ci.json).
+[ci.json](https://github.com/casper-network/casper-nctl/blob/dev/ci/ci.json).
 
 ## Step 2: Create network assets
 

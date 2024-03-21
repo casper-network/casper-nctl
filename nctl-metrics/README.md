@@ -5,7 +5,7 @@ A small setup that runs enough containers to get metrics working when using nctl
 ## How to run
 
 1. Ensure nctl has generated assets (`nctl-assets-setup`).
-2. Run `supervisord -c utils/nctl-metrics/supervisord.conf`.
+2. Run `supervisord -c nctl-metrics/supervisord.conf`.
 3. Navigate to <http://localhost:9090> and watch metrics.
 
 ## Architecture
@@ -34,7 +34,7 @@ Each has a `node` label indicating which node's memory usage is shown.
 
 * Why am I not getting any memory metrics?
 
-Check the logs `memory-stats-collector.log`. If there are messages stating `AF_UNIX path too long`, the root path of your `casper-node/utils/nctl/assets/...`, which contains the `supervisord.sock` directory is too long.
+Check the logs `memory-stats-collector.log`. If there are messages stating `AF_UNIX path too long`, the root path of your `casper-nctl/assets/...`, which contains the `supervisord.sock` directory is too long.
 
 * Why is podman complaining about `policy.json`?
 

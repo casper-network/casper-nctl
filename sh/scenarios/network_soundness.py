@@ -39,7 +39,7 @@ COMMAND_EXECUTION_TIME_SECS = 3
 invoke_lock = threading.Lock()
 current_node_count = 5
 path_to_client = ""
-huge_deploy_path = "./utils/nctl/sh/scenarios/smart_contracts/named_keys_bloat.wasm"
+huge_deploy_path = "./sh/scenarios/smart_contracts/named_keys_bloat.wasm"
 huge_deploy_payment_amount = 10000000000000000
 test_shutting_down = False
 
@@ -120,7 +120,7 @@ def start_network():
     invoke(command)
 
     for node in range(1, 11):
-        path_to_chainspec = "utils/nctl/assets/net-1/nodes/node-{}/config/2_0_0/chainspec.toml".format(
+        path_to_chainspec = "assets/net-1/nodes/node-{}/config/2_0_0/chainspec.toml".format(
             node)
         chainspec = toml.load(path_to_chainspec)
         chainspec['transactions'][
@@ -220,7 +220,7 @@ def get_node_metrics_endpoint(node):
 
 
 def get_node_rpc_endpoint(node):
-    sidecar_config_path = "./utils/nctl/assets/net-1/nodes/node-{}/config/2_0_0/sidecar.toml".format(
+    sidecar_config_path = "./assets/net-1/nodes/node-{}/config/2_0_0/sidecar.toml".format(
         node)
     config = toml.load(sidecar_config_path)
     sidecar_address = config['rpc_server']['main_server']['address']
@@ -314,7 +314,7 @@ def run_health_checks():
     logs_with_chunk_indicator = 0
     for node in range(1, 11):
         chunk_indicator_found = False
-        path_to_logs = "./utils/nctl/assets/net-1/nodes/node-{}/logs".format(
+        path_to_logs = "./assets/net-1/nodes/node-{}/logs".format(
             node)
         for filename in os.listdir(path_to_logs):
             if filename != "stderr.log":
@@ -352,9 +352,9 @@ def start_test_timer(secs, deploy_sender_handle, huge_deploy_sender_handle,
 def make_huge_deploy(node):
     log("*** creating huge deploy ***")
 
-    secret_key = "./utils/nctl/assets/net-1/nodes/node-{}/keys/secret_key.pem".format(
+    secret_key = "./assets/net-1/nodes/node-{}/keys/secret_key.pem".format(
         node)
-    session_path = "./utils/nctl/sh/scenarios/smart_contracts/named_keys_bloat.wasm"
+    session_path = "./sh/scenarios/smart_contracts/named_keys_bloat.wasm"
     output = "./target/named_keys_bloat_deploy.json"
     chain_name = "casper-net-1"
     ttl = "5minutes"

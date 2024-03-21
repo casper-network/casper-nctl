@@ -16,7 +16,7 @@ be `dev` (or your working branch recently forked from `dev`) for casper-node and
 casper-node-launcher.
 
 To find out which branch of the client and launcher are compatible with the current branch of node, refer to
-[ci.json](https://github.com/casper-network/casper-node/blob/dev/utils/nctl/ci/ci.json).
+[ci.json](https://github.com/casper-network/casper-nctl/blob/dev/ci/ci.json).
 
 ## Install prerequisites
 
@@ -35,7 +35,7 @@ make setup-rs
 ## Extend .bashrc file to make NCTL commands available from terminal session
 
 ```
-cd YOUR_WORKING_DIRECTORY/casper-node
+cd YOUR_WORKING_DIRECTORY/casper-nctl
 
 cat >> $HOME/.bashrc <<- EOM
 
@@ -44,7 +44,7 @@ cat >> $HOME/.bashrc <<- EOM
 # ----------------------------------------------------------------------
 
 # Activate NCTL shell.
-. $(pwd)/utils/nctl/activate
+. $(pwd)/activate
 
 EOM
 ```

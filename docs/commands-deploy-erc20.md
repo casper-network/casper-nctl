@@ -28,7 +28,7 @@ nctl-erc20-fund-users amount=4440000000
 
 Installs the ERC0-20 smart contract under the network's faucet account.  
 
-NOTE : The compiled wasm file must have been previously moved to the test network's bin folder (e.g. `casper-node/utils/nctl/assets/net-1/bin`).  For further information refer to the network's smart contract SDK.
+NOTE : The compiled wasm file must have been previously moved to the test network's bin folder (e.g. `casper-nctl/assets/net-1/bin`).  For further information refer to the network's smart contract SDK.
 
 ```
 nctl-erc20-install 
