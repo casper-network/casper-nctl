@@ -168,6 +168,9 @@ function parallel_check_network_sync() {
             write_lfb_of_node_to_pipe $IDX $PIPE $LOG &
         done
 
+        # avoid a race condition with the writes
+        sleep 1
+
         while true
         do
             if read LINE;
@@ -316,7 +319,7 @@ function get_switch_block() {
     fi
 }
 
-# Gets the header of the switch block of the given era from a V1 node without using casper-client.
+# Gets the switch block of the given era from a V1 node without using casper-client.
 function get_switch_block_v1() {
     local NODE_ID=${1}
     # Number of blocks to walkback before erroring out
@@ -324,16 +327,9 @@ function get_switch_block_v1() {
     local BLOCK_HASH=${3}
     local ERA=${4}
 
-    if [ -z "$BLOCK_HASH" ]; then
-        JSON_OUT=$(curl $(get_node_address_rpc_for_curl "$NODE_ID") -s -H "Content-Type: application/json" -d \
-            '{"jsonrpc":"2.0","method":"chain_get_block","id":0,"params":{}}')
-    else
-        JSON_OUT=$(curl $(get_node_address_rpc_for_curl "$NODE_ID") -s -H "Content-Type: application/json" -d \
-            '{"jsonrpc":"2.0","method":"chain_get_block","id":0,"params":{"block_identifier":{"Hash":"'$BLOCK_HASH'"}}}')
-    fi
+    local BLOCK=$(get_block_v1 "$NODE_ID" "$BLOCK_HASH")
 
     if [ "$WALKBACK" -gt 0 ]; then
-        local BLOCK=$(echo "$JSON_OUT" | jq '.result.block')
         local ERA_END="$(echo "$BLOCK" | jq '.header.era_end')"
         local ERA_ID="$(echo "$BLOCK" | jq '.header.era_id')"
         if [ "$ERA_END" = "null" ] || { [ -n "$ERA" ] && [ "$ERA_ID" != "$ERA" ]; }; then
@@ -346,6 +342,23 @@ function get_switch_block_v1() {
     else
         echo "null"
     fi
+}
+
+# Gets either the latest block or one with the provided hash from a V1 node without using casper-client.
+function get_block_v1() {
+    local NODE_ID=${1}
+    local BLOCK_HASH=${2}
+
+    if [ -z "$BLOCK_HASH" ]; then
+        JSON_OUT=$(curl $(get_node_address_rpc_for_curl "$NODE_ID") -s -H "Content-Type: application/json" -d \
+            '{"jsonrpc":"2.0","method":"chain_get_block","id":0,"params":{}}')
+    else
+        JSON_OUT=$(curl $(get_node_address_rpc_for_curl "$NODE_ID") -s -H "Content-Type: application/json" -d \
+            '{"jsonrpc":"2.0","method":"chain_get_block","id":0,"params":{"block_identifier":{"Hash":"'$BLOCK_HASH'"}}}')
+    fi
+
+    local BLOCK=$(echo "$JSON_OUT" | jq '.result.block')
+    echo "$BLOCK"
 }
 
 function get_switch_block_equivocators() {
@@ -385,8 +398,8 @@ function verify_transfer_inclusion() {
     fi
 
     if [ "$WALKBACK" -gt 0 ]; then
-        BLOCK_HEADER=$(echo "$JSON_OUT" | jq '.result.block.header')
-        BLOCK_TRANSFER_HASHES=$(echo "$JSON_OUT" | jq -r '.result.block.body.transfer_hashes[]')
+        BLOCK_HEADER=$(echo "$JSON_OUT" | jq '.result.block_with_signatures.block.Version2.header')
+        BLOCK_TRANSFER_HASHES=$(echo "$JSON_OUT" | jq -r '.result.block_with_signatures.block.Version2.body.mint[]')
         if grep -q "${TRANSFER}" <<< "$BLOCK_TRANSFER_HASHES"; then
             log "Transfer: $TRANSFER found in block!"
         else
@@ -419,8 +432,8 @@ function verify_wasm_inclusion() {
     fi
 
     if [ "$WALKBACK" -gt 0 ]; then
-        BLOCK_HEADER=$(echo "$JSON_OUT" | jq '.result.block.header')
-        BLOCK_DEPLOY_HASHES=$(echo "$JSON_OUT" | jq -r '.result.block.body.deploy_hashes[]')
+        BLOCK_HEADER=$(echo "$JSON_OUT" | jq '.result.block_with_signatures.block.Version2.header')
+        BLOCK_DEPLOY_HASHES=$(echo "$JSON_OUT" | jq -r '.result.block_with_signatures.block.Version2.body.standard[]')
         if grep -q "${DEPLOY_HASH}" <<< "$BLOCK_DEPLOY_HASHES"; then
             log "DEPLOY: $DEPLOY_HASH found in block!"
         else
