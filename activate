@@ -7,9 +7,11 @@
 # Set here.
 export NCTL="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# Set casper-node root.
-NCTL_CASPER_HOME="$( cd "$( dirname "${NCTL[0]}" )" && pwd )"
-export NCTL_CASPER_HOME="$NCTL_CASPER_HOME"/casper-node
+# Set casper-node root if not already set by CI.
+if [ -z "$NCTL_CASPER_HOME" ]; then
+    NCTL_CASPER_HOME=${NCTL_CASPER_HOME:-$( cd "$( dirname "${NCTL[0]}" )" && pwd )}
+    export NCTL_CASPER_HOME="$NCTL_CASPER_HOME"/casper-node
+fi
 
 # Set casper-client root.
 NCTL_CASPER_CLIENT_ROOT=${NCTL_CASPER_CLIENT_ROOT:-$( cd "$( dirname "${NCTL_CASPER_HOME[0]}" )" && pwd )}
