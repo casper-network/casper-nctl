@@ -16,9 +16,6 @@ Ensure you are checked out to the correct branch of each of the three repositori
 be `dev` (or your working branch recently forked from `dev`) for casper-node and casper-client-rs, and `main` for
 casper-node-launcher.
 
-To find out which branch of the client and launcher are compatible with the current branch of node, refer to
-[ci.json](https://github.com/casper-network/casper-nctl/blob/dev/ci/ci.json).
-
 ## Install prerequisites
 
 ```

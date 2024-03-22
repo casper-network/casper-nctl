@@ -39,7 +39,7 @@ function _main()
     LOCAL_ACCOUNT="$NCTL_CASPER_HOME/resources/local/accounts.toml"
 
     STAGE_DIR="$NCTL/overrides"
-    CI_JSON_CONFIG_FILE="$NCTL/ci/ci.json"
+    CI_JSON_CONFIG_FILE="$NCTL_CASPER_HOME/ci/ci.json"
     PROTO_1=$(jq -r '.nctl_upgrade_tests."protocol_1"' "$CI_JSON_CONFIG_FILE")
     PROTO_DIR="$NCTL/remotes/$PROTO_1"
 
