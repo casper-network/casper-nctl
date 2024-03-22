@@ -16,6 +16,7 @@
 
 source "$NCTL/sh/utils/main.sh"
 source "$NCTL/sh/node/svc_$NCTL_DAEMON_TYPE".sh
+source "$NCTL/sh/scenarios/common/itst.sh"
 
 # ----------------------------------------------------------------
 # MAIN
@@ -62,7 +63,7 @@ function _step_02()
 
 function assert_present_era_infos() {
     local NODE_ID=${1}
-    local BLOCK=$(nctl-view-chain-block)
+    local BLOCK=$(get_block_v1 "1")
     local CURRENT_ERA_ID=$(jq -r '.header.era_id' <<< "$BLOCK")
     local SEQ_END=$(($CURRENT_ERA_ID-1))
     local STATE_ROOT_HASH=$(jq -r '.header.state_root_hash' <<< "$BLOCK")

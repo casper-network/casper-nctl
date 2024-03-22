@@ -205,7 +205,7 @@ function _step_07()
 
     ACTIVATE_ERA="$(get_chain_era)"
     ERA_ID=$((ACTIVATE_ERA - 1))
-    SWITCH_BLOCK=$(get_switch_block "1" "32" "" "$ERA_ID")
+    SWITCH_BLOCK=$(get_switch_block_v1 "1" "32" "" "$ERA_ID")
     STATE_HASH=$(echo "$SWITCH_BLOCK" | jq -r '.header.state_root_hash')
     TRUSTED_HASH=$(echo "$SWITCH_BLOCK" | jq -r '.hash')
     PROTOCOL_VERSION='2_0_0'
