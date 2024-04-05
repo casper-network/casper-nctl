@@ -401,7 +401,7 @@ function get_process_name_of_node_group()
 #######################################
 function get_count_of_started_nodes()
 {
-    nctl-status | grep -v 'Not started' | wc -l
+    nctl-status | grep -E 'node-[0-9]+' | grep -v 'Not started' | wc -l
 }
 
 

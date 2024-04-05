@@ -449,7 +449,7 @@ function verify_wasm_inclusion() {
 }
 
 function get_running_node_count {
-    local RUNNING_COUNT=$(nctl-status | grep 'RUNNING' | wc -l)
+    local RUNNING_COUNT=$(nctl-status | grep -Ec 'node-[0-9]+ +RUNNING')
     echo "$RUNNING_COUNT"
 }
 
