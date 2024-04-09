@@ -183,22 +183,6 @@ function _step_07()
 
     log_step_upgrades 7 "joining passive nodes"
 
-    log "... submitting auction bids"
-    for NODE_ID in $(seq 1 "$(get_count_of_nodes)")
-    do
-        if [ $(get_node_is_up "$NODE_ID") == false ]; then
-            source "$NCTL/sh/contracts-auction/do_bid.sh" \
-                node="$NODE_ID" \
-                amount="$(get_node_staking_weight "$NODE_ID")" \
-                rate="2" \
-                quiet="TRUE"
-        fi
-    done
-
-    log "... awaiting auction bid acceptance (2 eras + 1 block)"
-    nctl-await-n-eras offset='2' sleep_interval='5.0' timeout='180'
-    await_n_blocks 1
-
     log "... starting nodes"
     TRUSTED_HASH="$(get_chain_latest_block_hash)"
     for NODE_ID in $(seq 1 "$(get_count_of_nodes)")
@@ -311,6 +295,22 @@ function _step_08()
             log "HASH MATCH :: $NODE_ID  :: HASH = $NX_STATE_ROOT_HASH :: N1 HASH = $N1_STATE_ROOT_HASH"
         fi
     done
+
+    log "... submitting auction bids"
+    for NODE_ID in $(seq 1 "$(get_count_of_nodes)")
+    do
+        if [ $(get_node_is_up "$NODE_ID") == false ]; then
+            source "$NCTL/sh/contracts-auction/do_bid.sh" \
+                node="$NODE_ID" \
+                amount="$(get_node_staking_weight "$NODE_ID")" \
+                rate="2" \
+                quiet="TRUE"
+        fi
+    done
+
+    log "... awaiting auction bid acceptance (2 eras + 1 block)"
+    nctl-await-n-eras offset='2' sleep_interval='5.0' timeout='180'
+    await_n_blocks 1
 
     log "Waiting for all nodes to sync to genesis"
     for NODE_ID in $(seq 1 "$(get_count_of_nodes)")
