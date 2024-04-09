@@ -740,7 +740,7 @@ function test_get_block_transfers() {
     fi
 
     # Deploy Hash
-    if [ "$DEPLOY_HASH" = "$(echo $OUTPUT | jq -r '.result.transfers[].deploy_hash')" ]; then
+    if [ "$DEPLOY_HASH" = "$(echo $OUTPUT | jq -r '.result.transfers[].Version2.transaction_hash.Deploy.deploy_hash')" ]; then
         log "... deploy hash match! [expected]"
     else
         log "ERROR: Mismatched deploy hash!"
@@ -748,7 +748,7 @@ function test_get_block_transfers() {
     fi
 
     # From Account
-    if [ "$FROM_ACCOUNT" = "$(echo $OUTPUT | jq -r '.result.transfers[].from')" ]; then
+    if [ "$FROM_ACCOUNT" = "$(echo $OUTPUT | jq -r '.result.transfers[].Version2.from.AccountHash')" ]; then
         log "... from account match! [expected]"
     else
         log "ERROR: Mismatched from account!"
@@ -756,7 +756,7 @@ function test_get_block_transfers() {
     fi
 
     # To Account
-    if [ "$TO_ACCOUNT" = "$(echo $OUTPUT | jq -r '.result.transfers[].to')" ]; then
+    if [ "$TO_ACCOUNT" = "$(echo $OUTPUT | jq -r '.result.transfers[].Version2.to')" ]; then
         log "... to account match! [expected]"
     else
         log "ERROR: Mismatched to account!"
