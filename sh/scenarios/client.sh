@@ -141,7 +141,7 @@ function main() {
     # 22. Test get-era-info subcommand
     test_get_era_info "$BLOCK_HASH"
     # 23. Test query-global-state subcommand
-    test_query_global_state "$BLOCK_HASH" "$DEPLOY_HASH"
+    test_query_global_state "$BLOCK_HASH" "$ED25519_ACC_HASH"
     # 24. Test query-balance subcommand
     test_query_balance "$BLOCK_HASH" "$ED25519_HEX" "2500000000"
     # 25. Test get-account subcommand
@@ -563,7 +563,7 @@ function test_query_balance() {
 # ... compare alias output
 function test_query_global_state() {
     local BLOCK_HASH=${1}
-    local DEPLOY_HASH=${2}
+    local ACCOUNT_HASH=${2}
     local OUTPUT
     local ALIAS_OUTPUT
 
@@ -578,16 +578,27 @@ function test_query_global_state() {
         --node-address "$(get_node_address_rpc)" \
         --block-identifier "$BLOCK_HASH" \
         --id '1' \
-        --key deploy-"$DEPLOY_HASH")
+        --key "$ACCOUNT_HASH")
 
     # Check client responded
     test_with_jq "$OUTPUT"
 
-    # Deploy Hash
-    if [ "$DEPLOY_HASH" = "$(echo $OUTPUT | jq -r '.result.stored_value.DeployInfo.deploy_hash')" ]; then
-        log "... deploy hash match! [expected]"
+    ENTITY_ADDR=$(echo "$OUTPUT" | jq -r '.result.stored_value.CLValue.parsed')
+
+    OUTPUT=$($(get_path_to_client) query-global-state \
+        --node-address "$(get_node_address_rpc)" \
+        --block-identifier "$BLOCK_HASH" \
+        --id '1' \
+        --key "$ENTITY_ADDR")
+
+    # Check client responded
+    test_with_jq "$OUTPUT"
+
+    # Account Hash
+    if [ "$ACCOUNT_HASH" = "$(echo $OUTPUT | jq -r '.result.stored_value.AddressableEntity.entity_kind.Account')" ]; then
+        log "... account hash match! [expected]"
     else
-        log "ERROR: Mismatched deploy hash!"
+        log "ERROR: Mismatched account hash!"
         exit 1
     fi
 
@@ -597,7 +608,7 @@ function test_query_global_state() {
         --node-address "$(get_node_address_rpc)" \
         --block-identifier "$BLOCK_HASH" \
         --id '1' \
-        --key deploy-"$DEPLOY_HASH")
+        --key "$ENTITY_ADDR")
 
     # Check client responded
     test_with_jq "$ALIAS_OUTPUT"
@@ -613,18 +624,18 @@ function test_query_global_state() {
     # --state-root-hash "$(get_state_root_hash)
     OUTPUT=$($(get_path_to_client) query-global-state \
         --node-address "$(get_node_address_rpc)" \
-        --key deploy-"$DEPLOY_HASH" \
+        --key "$ENTITY_ADDR" \
         --id '1' \
         --state-root-hash "$(get_state_root_hash)")
 
     # Check client responded
     test_with_jq "$OUTPUT"
 
-    # Deploy Hash
-    if [ "$DEPLOY_HASH" = "$(echo $OUTPUT | jq -r '.result.stored_value.DeployInfo.deploy_hash')" ]; then
-        log "... deploy hash match! [expected]"
+    # Account Hash
+    if [ "$ACCOUNT_HASH" = "$(echo $OUTPUT | jq -r '.result.stored_value.AddressableEntity.entity_kind.Account')" ]; then
+        log "... account hash match! [expected]"
     else
-        log "ERROR: Mismatched deploy hash!"
+        log "ERROR: Mismatched account hash!"
         exit 1
     fi
 
@@ -632,7 +643,7 @@ function test_query_global_state() {
 
     ALIAS_OUTPUT=$($(get_path_to_client) query-state \
         --node-address "$(get_node_address_rpc)" \
-        --key deploy-"$DEPLOY_HASH" \
+        --key "$ENTITY_ADDR" \
         --id '1' \
         --state-root-hash "$(get_state_root_hash)")
 
@@ -740,7 +751,7 @@ function test_get_block_transfers() {
     fi
 
     # Deploy Hash
-    if [ "$DEPLOY_HASH" = "$(echo $OUTPUT | jq -r '.result.transfers[].Version2.transaction_hash.Deploy.deploy_hash')" ]; then
+    if [ "$DEPLOY_HASH" = "$(echo $OUTPUT | jq -r '.result.transfers[].Version2.transaction_hash.Deploy')" ]; then
         log "... deploy hash match! [expected]"
     else
         log "ERROR: Mismatched deploy hash!"
