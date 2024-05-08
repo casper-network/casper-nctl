@@ -32,7 +32,12 @@ NODE_ID=${NODE_ID:-"all"}
 if [ "$NODE_ID" == "all" ]; then
     log "starting node(s) begins ... please wait"
     do_node_start_all "$TRUSTED_HASH"
-    log "starting node(s) complete"
+    if [[ ! ${CASPER_NCTL_NIGHTLY_TEST_COUNT+x} ]]; then
+        log "starting node(s) complete"
+    else
+        CASPER_NCTL_NIGHTLY_TEST_COUNT=$((CASPER_NCTL_NIGHTLY_TEST_COUNT+1))
+        log "starting node(s) complete for test #$CASPER_NCTL_NIGHTLY_TEST_COUNT"
+    fi
 else
     log "node-$NODE_ID: starting ..."
     do_node_start "$NODE_ID" "$TRUSTED_HASH"
