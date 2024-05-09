@@ -1273,7 +1273,7 @@ function get_block_containing_deploy_hash() {
 
     OUTPUT=$($(get_path_to_client) get-deploy \
         --node-address "$(get_node_address_rpc)" \
-        "$DEPLOY_HASH" | jq -r '.result.block_hash')
+        "$DEPLOY_HASH" | jq -r '.result.execution_info.block_hash')
 
     # Check non-empty
     check_client_responded "$OUTPUT"
