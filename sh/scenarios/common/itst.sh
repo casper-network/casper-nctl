@@ -156,16 +156,14 @@ function parallel_check_network_sync() {
         mkfifo $PIPE
     fi
 
-    if [ "$LOG" = 'true' ]; then
-        log_step "checking nodes' $FIRST_NODE to $LAST_NODE LFBs are in sync"
-    fi
+    log_step "checking nodes' $FIRST_NODE to $LAST_NODE LFBs are in sync"
 
     while [ "$ATTEMPTS" -le "$SYNC_TIMEOUT_SEC" ]; do
         ALL_HASHES=""
         EXPECTED=$((LAST_NODE-FIRST_NODE+1))
         for IDX in $(seq "$FIRST_NODE" "$LAST_NODE")
         do
-            write_lfb_of_node_to_pipe $IDX $PIPE $LOG &
+            write_lfb_of_node_to_pipe $IDX $PIPE $LOG & disown
         done
 
         # avoid a race condition with the writes
