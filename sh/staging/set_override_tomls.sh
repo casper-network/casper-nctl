@@ -139,7 +139,8 @@ function call_config_gen() {
        [ "$OVERRIDE_FILE" == "itst07_private_chain.accounts.toml.override" ] || \
        [ "$OVERRIDE_FILE" == "itst01_private_chain.chainspec.toml.override" ] || \
        [ "$OVERRIDE_FILE" == "itst02_private_chain.chainspec.toml.override" ] || \
-       [ "$OVERRIDE_FILE" == "itst11_private_chain.chainspec.toml.override" ]; then
+       [ "$OVERRIDE_FILE" == "itst11_private_chain.chainspec.toml.override" ] || \
+       [ "$OVERRIDE_FILE" == "itst14_private_chain.chainspec.toml.override" ]; then
         "$OVERRIDE_SCRIPT" --override_file "$OVERRIDE_FILE" \
             --toml_file "$TOML_FILE" \
             --output_file "$OUTPUT_FILE" \
