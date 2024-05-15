@@ -1,5 +1,2 @@
 [core]
 era_duration = '180seconds'
-
-[deploys]
-delete = { cost = 14_000, arguments = [0, 0] }

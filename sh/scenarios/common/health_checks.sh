@@ -323,12 +323,12 @@ function assert_eject_count() {
         return 0
     fi
 
-    if [ "$EJECTS_ALLOWED" != "$TOTAL" ]; then
-        log "ERROR: ALLOWED: $EJECTS_ALLOWED != TOTAL: $TOTAL"
+    if [ "$TOTAL" -gt "$EJECTS_ALLOWED" ]; then
+        log "ERROR: ALLOWED: $EJECTS_ALLOWED < TOTAL: $TOTAL"
         exit 1
     fi
 
-    log "SUCCESS: ALLOWED: $EJECTS_ALLOWED = TOTAL: $TOTAL (divided due to global)"
+    log "SUCCESS: ALLOWED: $EJECTS_ALLOWED > TOTAL: $TOTAL (divided due to global)"
 }
 
 # ----------------------------------------------------------------

@@ -133,7 +133,14 @@ function call_config_gen() {
     # itst06_private_chain and itst07_private_chain tests need the `--no_skip` flag in order
     # to pull the administrators section from the override toml. Without `--no_skip` the override
     # mechanism will skip any fields that are missing from the base toml file.
-    if [ "$OVERRIDE_FILE" == "itst06_private_chain.accounts.toml.override" ] || [ "$OVERRIDE_FILE" == "itst07_private_chain.accounts.toml.override" ]; then
+    #
+    # additionally, itst0?_private_chain.chainspec.toml.override also needs the `--no_skip` flag in order to pull the refund ratio key
+    if [ "$OVERRIDE_FILE" == "itst06_private_chain.accounts.toml.override" ] || \
+       [ "$OVERRIDE_FILE" == "itst07_private_chain.accounts.toml.override" ] || \
+       [ "$OVERRIDE_FILE" == "itst01_private_chain.chainspec.toml.override" ] || \
+       [ "$OVERRIDE_FILE" == "itst02_private_chain.chainspec.toml.override" ] || \
+       [ "$OVERRIDE_FILE" == "itst11_private_chain.chainspec.toml.override" ] || \
+       [ "$OVERRIDE_FILE" == "itst14_private_chain.chainspec.toml.override" ]; then
         "$OVERRIDE_SCRIPT" --override_file "$OVERRIDE_FILE" \
             --toml_file "$TOML_FILE" \
             --output_file "$OUTPUT_FILE" \

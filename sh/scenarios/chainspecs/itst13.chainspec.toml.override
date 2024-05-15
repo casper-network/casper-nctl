@@ -1,6 +1,3 @@
 [core]
 era_duration = '210seconds'
 auction_delay = 1
-
-[deploys]
-delete = { cost = 14_000, arguments = [0, 0] }

@@ -40,18 +40,19 @@ function main() {
     # wait 1 era, and then check they are still in sync.
     # This way we can verify that the node is up-to-date with the protocol state
     # after transitioning to an active validator.
-    parallel_check_network_sync 1 5 
+    parallel_check_network_sync 1 5 180 0
     do_await_era_change
-    parallel_check_network_sync 1 5
+    parallel_check_network_sync 1 5 180 0
     # 9. Run Closing Health Checks
     # ... restarts=1: due to node being stopped and started
+    # ... ejections=1: node is evicted becuase it's absent for an era which is longer than maximum round length
     source "$NCTL"/sh/scenarios/common/health_checks.sh \
             errors=0 \
             equivocators=0 \
             doppels=0 \
             crashes=0 \
             restarts=1 \
-            ejections=0
+            ejections=1
 
     log "------------------------------------------------------------"
     log "Scenario itst01 complete"
