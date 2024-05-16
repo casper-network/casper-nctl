@@ -57,7 +57,21 @@ function _main()
     _step_07
     _step_08
 
-    UPGRADE_HASH="$($(get_path_to_client) get-block --node-address "$(get_node_address_rpc '2')" | jq -r '.result.block_with_signatures.block.Version2.hash')"
+    log "... Attempting to retrieve upgrade hash from node-2."
+    RETRIES=10
+    while [ $RETRIES -gt 0 ]; do
+        {
+            RESPONSE=$($(get_path_to_client) get-block --node-address "$(get_node_address_rpc '2')") && break
+        } || {
+            sleep 1 && RETRIES=$((RETRIES-1))
+        }
+    done
+    if [ $RETRIES -eq 0 ]; then
+        log "ERROR :: failed to retrieve upgrade hash from node-2"
+        exit 1
+    fi
+
+    UPGRADE_HASH=$(echo $RESPONSE | jq -r '.result.block_with_signatures.block.Version2.hash')
 
     _step_09 "$PROTOCOL_VERSION" "$ACTIVATION_POINT" "$UPGRADE_HASH"
     _step_10

@@ -63,7 +63,7 @@ function _upgrade_node() {
 
     # Copy config file.
     if [ -z "$CONFIG_PATH" ]; then
-        cp $(get_path_to_node_config_file "$NODE_ID") "$PATH_TO_NODE"/config/"$PROTOCOL_VERSION"/
+        cp $(get_path_to_node_config_file "$NODE_ID") "$PATH_TO_NODE"/config/"$PROTOCOL_VERSION"/ || true
     else
         # Set paths to node's config.
         PATH_TO_CONFIG_FILE="$PATH_TO_NODE"/config/"$PROTOCOL_VERSION"/config.toml
@@ -92,7 +92,7 @@ function _upgrade_node() {
         python3 -c "${SCRIPT[*]}"
     fi
 
-    cp $(get_path_to_sidecar_config_file "$NODE_ID") "$PATH_TO_NODE"/config/"$PROTOCOL_VERSION"/
+    cp $(get_path_to_sidecar_config_file "$NODE_ID") "$PATH_TO_NODE"/config/"$PROTOCOL_VERSION"/ || true
 
     # Clean up.
     rm "$PATH_TO_UPGRADED_CHAINSPEC_FILE"
