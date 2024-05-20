@@ -519,9 +519,9 @@ function test_get_entity_kind_account() {
 
     # Account Hash Check
     echo $ACCOUNT_HASH
-    echo $OUTPUT | jq -r '.result.entity.AddressableEntity.entity_kind.Account'
+    echo $OUTPUT | jq -r '.result.entity.AddressableEntity.entity.entity_kind.Account'
 
-    if [ "$ACCOUNT_HASH" = "$(echo $OUTPUT | jq -r '.result.entity.AddressableEntity.entity_kind.Account')" ]; then
+    if [ "$ACCOUNT_HASH" = "$(echo $OUTPUT | jq -r '.result.entity.AddressableEntity.entity.entity_kind.Account')" ]; then
         log "... account hash match! [expected]"
     else
         log "ERROR: Mismatched account hash!"
@@ -1263,7 +1263,7 @@ function get_uref_for_public_key() {
     # Check non-empty
     check_client_responded "$OUTPUT"
 
-    echo "$OUTPUT" | jq -r '.result.entity.AddressableEntity.main_purse'
+    echo "$OUTPUT" | jq -r '.result.entity.AddressableEntity.entity.main_purse'
 }
 
 # returns block hash containing deploy
