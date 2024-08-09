@@ -69,6 +69,7 @@ function main()
                 --chain-name "$CHAIN_NAME" \
                 --node-address "$DISPATCH_NODE_ADDRESS" \
                 --payment-amount "$GAS_PAYMENT" \
+                --gas-price 128 \
                 --ttl "5minutes" \
                 --secret-key "$CP1_SECRET_KEY" \
                 --amount "$AMOUNT" \
