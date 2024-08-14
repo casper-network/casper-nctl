@@ -126,6 +126,7 @@ function _step_05()
 {
     local PROTOCOL_VERSION=${1}
     local ACTIVATION_POINT=${2}
+    local NODE_CHAINSPEC_PATH
 
     log_step_upgrades 3 "upgrading 1 thru 5"
 
@@ -138,6 +139,15 @@ function _step_05()
             log "... staging upgrade on non-validator node-$i"
         fi
         _upgrade_node "$PROTOCOL_VERSION" "$ACTIVATION_POINT" "$i"
+
+        NODE_CHAINSPEC_PATH="$(get_path_to_net)/nodes/node-$i/config/2_1_0/chainspec.toml"
+        sed -i 's/upper_threshold = 90/upper_threshold = 1/g' "$NODE_CHAINSPEC_PATH"
+        sed -i 's/lower_threshold = 50/lower_threshold = 0/g' "$NODE_CHAINSPEC_PATH"
+        sed -i 's/max_gas_price = 3/max_gas_price = 10/g' "$NODE_CHAINSPEC_PATH"
+        sed -i 's/max_block_size = 10485760/max_block_size = 2048/g' "$NODE_CHAINSPEC_PATH"
+        sed -i 's/native_mint_lane = \[ 0, 1024, 1024, 65000000000, 650,\]/native_mint_lane = \[0, 1024, 1024, 65_000_000_000, 100\]/g' "$NODE_CHAINSPEC_PATH"
+        sed -i 's/native_auction_lane = \[ 1, 2048, 2048, 362500000000, 145,\]/native_auction_lane = \[1, 2048, 2048, 362_500_000_000, 1\]/g' "$NODE_CHAINSPEC_PATH"
+        sed -i 's/wasm_lanes = \[ \[ 2, 1048576, 2048, 1000000000000, 1,\], \[ 3, 344064, 1024, 500000000000, 3,\], \[ 4, 172032, 1024, 50000000000, 7,\], \[ 5, 12288, 512, 1500000000, 15,\],\]/wasm_lanes = \[\[2, 1_048_576, 2048, 1_000_000_000_000, 1\], \[3, 344_064, 1024, 500_000_000_000, 1\], \[4, 172_032, 1024, 50_000_000_000, 1\], \[5, 12_288, 512, 1_500_000_000, 1\]\]/g' "$NODE_CHAINSPEC_PATH"
     done
 
     log "... awaiting 2 eras + 1 block"
