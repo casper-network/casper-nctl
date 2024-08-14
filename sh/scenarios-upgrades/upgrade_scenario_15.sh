@@ -6,10 +6,9 @@
 # This test checks if the current gas price is preserved across the upgrades.
 
 # 1. Start network from pre-built stage.
-# 2. Execute large amount of deploys to make the price go higher.
+# 2. Send 300 transfers to make the price go up.
 # 3. Upgrade all running nodes to v2
-# 4. Assert v2 nodes run & the chain advances (new blocks are generated)
-# 5. Assert the gas price is preserved.
+# 4. Assert the gas price is preserved.
 
 # ----------------------------------------------------------------
 # Imports.
@@ -45,27 +44,18 @@ function _main()
     local INITIAL_PROTOCOL_VERSION
     local ACTIVATION_POINT
 
-    # Step 01: Start network from pre-built stage.
     _step_01
-    # Step 02: Await for genesis
     _step_02
-    # Step 03: Populate global state -> native + wasm transfers.
     _step_03
-
-    # Step 04: Await era-id += 1.
     _step_04
 
     INITIAL_PROTOCOL_VERSION=$(get_node_protocol_version 1)
     ACTIVATE_ERA=$(($(get_chain_era)+2))
-
     log "Will upgrade the chain at era $ACTIVATE_ERA"
 
     _step_05 "$PROTOCOL_VERSION" "$ACTIVATE_ERA"
-
-    # Step 06: Assert gas price pre and post upgrade
     _step_06
-
-    _step_10
+    _step_07
 }
 
 # Step 01: Start network from pre-built stage.
@@ -103,7 +93,7 @@ function _step_02()
     do_await_genesis_era_to_complete 'false'
 }
 
-# Step 03: Populate global state -> native + wasm transfers.
+# Step 03: Populate global state -> native transfers.
 function _step_03()
 {
     log_step_upgrades 3 "dispatching deploys to populate global state"
@@ -155,7 +145,7 @@ function _step_05()
     await_n_blocks '1' 'true' '2'
 }
 
-# Step 06: Assert chain is progressing at all nodes.
+# Step 06: Assert gas price is preserved.
 function _step_06()
 {
     local PATH_NODE_LOGS
@@ -187,7 +177,7 @@ function _step_06()
 }
 
 # Step 10: Terminate.
-function _step_10()
+function _step_07()
 {
     log_step_upgrades 10 "test successful - tidying up"
 
