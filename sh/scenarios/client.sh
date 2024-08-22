@@ -1312,8 +1312,8 @@ function get_chainspec_from_rpc() {
     OUTPUT=$($(get_path_to_client) get-chainspec \
         --node-address "$(get_node_address_rpc)" \
         -vv \
-        | sed -n '/\[protocol\]/,$p' \
-        | sed '/FAUCET/Q')
+        | awk '/\[.+\]/{flag=1} flag' \
+        | awk '/FAUCET/{exit} {print}')
 
     # Check non-empty
     check_client_responded "$OUTPUT"
@@ -1341,7 +1341,7 @@ function get_chainspec_json_from_rpc() {
     OUTPUT=$($(get_path_to_client) get-chainspec \
         --node-address "$(get_node_address_rpc)" \
         -vv \
-        | sed '/\[protocol\]/Q')
+        | awk '/\[.+\]/{exit} {print}')
 
     # Check non-empty
     check_client_responded "$OUTPUT"
