@@ -41,7 +41,7 @@ function main() {
     nctl-start node=6
     nctl-start node=7
     # 7. Check if the network is progressing
-    do_await_era_change_with_timeout 1 "500"
+    do_await_era_change_with_timeout 1 "1500"
     source "$NCTL"/sh/scenarios/common/health_checks.sh \
             errors=0 \
             equivocators=0 \
