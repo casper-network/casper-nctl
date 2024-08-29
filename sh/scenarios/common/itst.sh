@@ -472,7 +472,8 @@ function assert_node_proposed() {
             BLOCK="$(echo "$VERSIONED_BLOCK" | jq '.Version1')"
         fi
 
-        PROPOSER=$(echo "$BLOCK" | jq -r '.body.proposer')
+        PROPOSER=$(echo "$BLOCK" | jq -r '.header.proposer')
+        HEIGHT=$(echo "$BLOCK" | jq -r '.header.height')
 
         if [ "$PROPOSER" == "$PUBLIC_KEY_HEX" ]; then
             log "Node-$NODE_ID created a block!"
@@ -480,6 +481,7 @@ function assert_node_proposed() {
             log "Proposer: $PROPOSER"
             break;
         else
+            log "Block $HEIGHT proposed by $PROPOSER, but we need one from $PUBLIC_KEY_HEX"
             sleep 1
             TIMEOUT=$((TIMEOUT-1))
             if [ "$TIMEOUT" = '0' ]; then
@@ -516,7 +518,7 @@ function assert_no_proposal_walkback() {
         else
             BLOCK="$(echo "$VERSIONED_BLOCK" | jq '.Version1')"
         fi
-        PROPOSER=$(echo "$BLOCK" | jq -r '.body.proposer')
+        PROPOSER=$(echo "$BLOCK" | jq -r '.header.proposer')
         if [ "$PROPOSER" = "$PUBLIC_KEY_HEX" ]; then
             log "ERROR: Node proposal found!"
             log "BLOCK HASH $CHECK_HASH: PROPOSER=$PROPOSER, NODE_KEY_HEX=$PUBLIC_KEY_HEX"
