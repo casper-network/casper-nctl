@@ -106,7 +106,7 @@ function assert_network_upgrade() {
 
     # The empty status response is usually ~16 lines long, so we wait for more than that.
     while [[ $(echo "$STATUS" | wc -l) -le 200 ]]; do
-        echo "Waiting for nodes and sidecars to start..."
+        log "Waiting for nodes and sidecars to start..."
         sleep 3
         STATUS=$(nctl-view-node-status)
     done
