@@ -1410,7 +1410,7 @@ function compare_client_subcommand_count() {
 
     log_step "Comparing client subcommand count..."
 
-    if [ "$COMP1" = "$COMP2" ]; then
+    if [ "$COMP1" -eq "$COMP2" ]; then
         log "$COMP1 = $COMP2 [expected]"
     else
         log "ERROR: $COMP1 != $COMP2"

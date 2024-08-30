@@ -95,8 +95,13 @@ function get_node_protocol_version()
     local NODE_ID=${1}
     local TIMEOUT_SEC=${2:-20}
 
-    echo $(_get_from_status_with_retry "$NODE_ID" "$TIMEOUT_SEC" ".api_version") \
-        | sed -e 's/^"//' -e 's/"$//'
+    local PROTO_VERSION=$(_get_from_status_with_retry "$NODE_ID" "$TIMEOUT_SEC" ".protocol_version")
+    if [ -z "${PROTO_VERSION}" ]; then
+        echo $(_get_from_status_with_retry "$NODE_ID" "$TIMEOUT_SEC" ".api_version") \
+            | sed -e 's/^"//' -e 's/"$//'
+    else
+        echo $PROTO_VERSION | sed -e 's/^"//' -e 's/"$//'
+    fi
 }
 
 #######################################

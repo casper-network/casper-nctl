@@ -38,8 +38,6 @@ function main() {
     log "------------------------------------------------------------"
     log "Regression 4771 test finished"
     log "------------------------------------------------------------"
-
-    exit 0
 }
 
 function install_contract() {
