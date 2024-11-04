@@ -83,19 +83,10 @@ function _main()
 
     PATH_TO_STAGE="$NCTL/stages/stage-$STAGE_ID"
     COUNT_NODES=$(get_count_of_nodes)
-    PROTOCOL_VERSION=$(_get_protocol_version_of_next_upgrade "$PATH_TO_STAGE")
-
-    if [ -z "$CHAINSPEC_PATH" ]; then
-        CHAINSPEC_PATH="$PATH_TO_STAGE/$PROTOCOL_VERSION/chainspec.toml"
-    fi
-
-    if [ -z "$CONFIG_PATH" ]; then
-        CONFIG_PATH="$PATH_TO_STAGE/$PROTOCOL_VERSION/config.toml"
-    fi
-
-    if [ -z "$SIDECAR_CONFIG_PATH" ]; then
-        SIDECAR_CONFIG_PATH="$PATH_TO_STAGE/$PROTOCOL_VERSION/sidecar.toml"
-    fi
+    PROTOCOL_VERSION="2_0_0"
+    CHAINSPEC_PATH="/home/casperlabs-dev/DEV/src/zajko/casper-node/resources/local/chainspec.toml"
+    CONFIG_PATH="/home/casperlabs-dev/DEV/src/zajko/casper-node/resources/local/config.toml"
+    SIDECAR_CONFIG_PATH="/home/casperlabs-dev/DEV/src/casper-sidecar/resources/example_configs/default_rpc_only_config.toml"
 
     if [ "$PROTOCOL_VERSION" != "" ]; then
         if [ $VERBOSE == true ]; then
@@ -106,10 +97,10 @@ function _main()
         setup_asset_binaries "$PROTOCOL_VERSION" \
                              "$COUNT_NODES" \
                              "$NCTL_CASPER_CLIENT_HOME/target/$NCTL_COMPILE_TARGET/casper-client" \
-                             "$PATH_TO_STAGE/$PROTOCOL_VERSION/casper-node" \
-                             "$PATH_TO_STAGE/$PROTOCOL_VERSION/casper-node-launcher" \
+                             "/home/casperlabs-dev/DEV/src/zajko/casper-node/target/release/casper-node" \
+                             "/home/casperlabs-dev/DEV/src/casper-node-launcher/target/release/casper-node-launcher" \
                              "$NCTL_CASPER_SIDECAR_HOME/target/$NCTL_COMPILE_TARGET/casper-sidecar" \
-                             "$PATH_TO_STAGE/$PROTOCOL_VERSION"
+                             "$NCTL_CASPER_HOME/target/wasm32-unknown-unknown/release"
         setup_asset_chainspec "$COUNT_NODES" \
                               "$(get_protocol_version_for_chainspec "$PROTOCOL_VERSION")" \
                               "$ACTIVATION_POINT" \
@@ -179,3 +170,5 @@ _main "${STAGE_ID:-1}" \
       "${CHAINSPEC_PATH}" \
       "${CONFIG_PATH}" \
       "${SIDECAR_CONFIG_PATH}"
+
+nctl-await-n-eras offset='2' sleep_interval='5.0' timeout='180'

@@ -371,19 +371,11 @@ function _main()
     local PROTOCOL_VERSION
 
     PATH_TO_STAGE="$NCTL/stages/stage-$STAGE_ID"
-    PROTOCOL_VERSION=$(_get_protocol_version_of_next_upgrade "$PATH_TO_STAGE" "$NODE_ID")
+    PROTOCOL_VERSION="2_0_0"
+    CHAINSPEC_PATH="/home/casperlabs-dev/DEV/src/zajko/casper-node/resources/local/chainspec.toml"
+    CONFIG_PATH="/home/casperlabs-dev/DEV/src/zajko/casper-node/resources/local/config.toml"
+    SIDECAR_CONFIG_PATH="/home/casperlabs-dev/DEV/src/casper-sidecar/resources/example_configs/default_rpc_only_config.toml"
 
-    if [ -z "$CHAINSPEC_PATH" ]; then
-        CHAINSPEC_PATH="$PATH_TO_STAGE/$PROTOCOL_VERSION/chainspec.toml"
-    fi
-
-    if [ -z "$CONFIG_PATH" ]; then
-        CONFIG_PATH="$PATH_TO_STAGE/$PROTOCOL_VERSION/config.toml"
-    fi
-
-    if [ -z "$SIDECAR_CONFIG_PATH" ]; then
-        SIDECAR_CONFIG_PATH="$PATH_TO_STAGE/$PROTOCOL_VERSION/sidecar.toml"
-    fi
 
     if [ "$PROTOCOL_VERSION" != "" ]; then
         if [ "$VERBOSE" == true ]; then
@@ -393,11 +385,11 @@ function _main()
                          "$PROTOCOL_VERSION"
         _setup_asset_binaries "$PROTOCOL_VERSION" \
                              "$NODE_ID" \
-                             "$PATH_TO_STAGE/$PROTOCOL_VERSION/casper-client" \
-                             "$PATH_TO_STAGE/$PROTOCOL_VERSION/casper-node" \
-                             "$PATH_TO_STAGE/$PROTOCOL_VERSION/casper-node-launcher" \
-                             "$PATH_TO_STAGE/$PROTOCOL_VERSION/casper-sidecar" \
-                             "$PATH_TO_STAGE/$PROTOCOL_VERSION"
+                             "$NCTL_CASPER_CLIENT_HOME/target/$NCTL_COMPILE_TARGET/casper-client" \
+                             "/home/casperlabs-dev/DEV/src/zajko/casper-node/target/release/casper-node" \
+                             "/home/casperlabs-dev/DEV/src/casper-node-launcher/target/release/casper-node-launcher" \
+                             "/home/casperlabs-dev/DEV/src/casper-sidecar" \
+                             "$NCTL_CASPER_HOME/target/wasm32-unknown-unknown/release"
         _setup_asset_chainspec "$(get_protocol_version_for_chainspec "$PROTOCOL_VERSION")" \
                               "$ACTIVATION_POINT" \
                               "$CHAINSPEC_PATH" \
@@ -408,6 +400,7 @@ function _main()
                                  "$SIDECAR_CONFIG_PATH" \
                                  false
         if [ "$(echo $PROTOCOL_VERSION | tr -d '_')" -ge "140" ]; then
+        echo "DUPADUPA"
             _setup_asset_global_state_toml "$NODE_ID" \
                                           "$PROTOCOL_VERSION"
         fi

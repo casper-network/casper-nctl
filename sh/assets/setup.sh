@@ -30,7 +30,6 @@ unset GENESIS_DELAY_SECONDS
 unset NET_ID
 unset NODE_COUNT
 unset PATH_TO_CHAINSPEC
-
 for ARGUMENT in "$@"
 do
     KEY=$(echo "$ARGUMENT" | cut -f1 -d=)
@@ -83,13 +82,17 @@ function _main()
     fi
     mkdir -p "$PATH_TO_NET"
 
-    log "asset setup begins ... please wait"
+    PROTOCOL_VERSION="${PROTOCOL_VERSION_OVERRIDE:-2.0.0}"
+    PROTOCOL_VERSION_UNDERSCORE=$(echo $PROTOCOL_VERSION | tr '.' '_')
+    
+    log "asset setup begins ... please wait. Protocol version: ${PROTOCOL_VERSION}"
+    
 
     # Setup new.
-    setup_asset_directories "$COUNT_NODES" "$COUNT_USERS" "2_0_0"
+    setup_asset_directories "$COUNT_NODES" "$COUNT_USERS" $PROTOCOL_VERSION_UNDERSCORE
 
     if [ "$NCTL_COMPILE_TARGET" = "debug" ]; then
-        setup_asset_binaries "2_0_0" \
+        setup_asset_binaries $PROTOCOL_VERSION_UNDERSCORE \
                              "$(get_count_of_nodes)" \
                              "$NCTL_CASPER_CLIENT_HOME/target/debug/casper-client" \
                              "$NCTL_CASPER_HOME/target/debug/casper-node" \
@@ -97,7 +100,7 @@ function _main()
                              "$NCTL_CASPER_SIDECAR_HOME/target/debug/casper-sidecar" \
                              "$NCTL_CASPER_HOME/target/wasm32-unknown-unknown/release"
     else
-        setup_asset_binaries "2_0_0" \
+        setup_asset_binaries $PROTOCOL_VERSION_UNDERSCORE \
                              "$(get_count_of_nodes)" \
                              "$NCTL_CASPER_CLIENT_HOME/target/release/casper-client" \
                              "$NCTL_CASPER_HOME/target/release/casper-node" \
@@ -109,9 +112,8 @@ function _main()
     setup_asset_keys "$COUNT_NODES" "$COUNT_USERS"
 
     setup_asset_daemon
-
     setup_asset_chainspec "$COUNT_NODES" \
-                          "2.0.0" \
+                          $PROTOCOL_VERSION \
                           $(get_genesis_timestamp "$GENESIS_DELAY") \
                           "$PATH_TO_CHAINSPEC" \
                           true
@@ -121,9 +123,8 @@ function _main()
     else
         setup_asset_accounts_from_template "$COUNT_NODES" "$COUNT_USERS" "$PATH_TO_ACCOUNTS"
     fi
-
     setup_asset_node_configs "$COUNT_NODES" \
-                             "2_0_0" \
+                             $PROTOCOL_VERSION_UNDERSCORE \
                              "$PATH_TO_CONFIG_TOML" \
                              "$PATH_TO_SIDECAR_CONFIG_TOML" \
                              true

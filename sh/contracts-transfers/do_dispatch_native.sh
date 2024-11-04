@@ -45,8 +45,8 @@ function main()
         NODE_ADDRESS=$(get_node_address_rpc "$NODE_ID")
     fi
 
-    CP1_SECRET_KEY=$(get_path_to_secret_key "$NCTL_ACCOUNT_TYPE_FAUCET")
-    CP1_ACCOUNT_KEY=$(get_account_key "$NCTL_ACCOUNT_TYPE_FAUCET")
+    CP1_SECRET_KEY="/home/casperlabs-dev/DEV/src/casper-nctl/assets/net-1/users/user-1/secret_key.pem"
+    CP1_ACCOUNT_KEY="/home/casperlabs-dev/DEV/src/casper-nctl/assets/net-1/users/user-1/public_key.pem"
     CP2_ACCOUNT_KEY=$(get_account_key "$NCTL_ACCOUNT_TYPE_USER" "$USER_ID")
 
     if [ $VERBOSE == true ]; then
@@ -63,7 +63,7 @@ function main()
     SUCCESSFUL_DISPATCH_COUNT=0
     while [ $DISPATCH_ATTEMPTS -lt "$TRANSFERS" ]; do
         DISPATCH_ATTEMPTS=$((DISPATCH_ATTEMPTS + 1))
-        DISPATCH_NODE_ADDRESS=${NODE_ADDRESS:-$(get_node_address_rpc)}
+        DISPATCH_NODE_ADDRESS="http://127.0.0.1:7777"
         OUTPUT=$(
             $PATH_TO_CLIENT transfer \
                 --chain-name "$CHAIN_NAME" \

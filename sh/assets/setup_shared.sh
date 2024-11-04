@@ -182,6 +182,7 @@ function setup_asset_binaries()
             cp "$PATH_TO_NODE_LAUNCHER" "$PATH_TO_BIN"
         fi
         cp "$PATH_TO_NODE" "$PATH_TO_BIN/$PROTOCOL_VERSION"
+        echo "Copying binaries from $PATH_TO_NODE to $PATH_TO_BIN/$PROTOCOL_VERSION"
 
         if [ -f "$PATH_TO_SIDECAR" ]; then
             cp "$PATH_TO_SIDECAR" "$PATH_TO_BIN/$PROTOCOL_VERSION"

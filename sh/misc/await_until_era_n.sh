@@ -33,3 +33,5 @@ do
     fi
     sleep "$SLEEP_INTERVAL"
 done
+
+log "finished waiting for era"
