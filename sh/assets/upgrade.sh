@@ -20,7 +20,6 @@ function _upgrade_node() {
     local CONFIG_PATH=${4}
     local PATH_TO_NET=$(get_path_to_net)
     local PATH_TO_CONFIG_FILE
-    local SPECULATIVE_EXEC_ADDR
     local PATH_TO_CHAINSPEC_FILE=${5:-"$PATH_TO_NET/chainspec/chainspec.toml"}
 
     local PATH_TO_NODE
@@ -69,8 +68,6 @@ function _upgrade_node() {
         PATH_TO_CONFIG_FILE="$PATH_TO_NODE"/config/"$PROTOCOL_VERSION"/config.toml
 
         cp "$CONFIG_PATH" "$PATH_TO_CONFIG_FILE"
-
-        SPECULATIVE_EXEC_ADDR=$(grep 'speculative_exec_server' $PATH_TO_CONFIG_FILE || true)
 
         local SCRIPT=(
             "import toml;"

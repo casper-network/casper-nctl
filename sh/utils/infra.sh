@@ -242,18 +242,6 @@ function get_node_port_rpc()
 }
 
 #######################################
-# Calculates speculative exec port.
-# Arguments:
-#   Node ordinal identifier.
-#######################################
-function get_node_port_speculative_exec()
-{
-    local NODE_ID=${1}
-
-    get_node_port "$NCTL_BASE_PORT_SPEC_EXEC" "$NODE_ID"
-}
-
-#######################################
 # Calculates SSE port.
 # Arguments:
 #   Node ordinal identifier.

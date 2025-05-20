@@ -223,9 +223,8 @@ def get_node_rpc_endpoint(node):
     sidecar_config_path = "./assets/net-1/nodes/node-{}/config/2_0_0/sidecar.toml".format(
         node)
     config = toml.load(sidecar_config_path)
-    sidecar_address = config['rpc_server']['main_server']['address']
-    chunks = sidecar_address.split(":")
-    rpc_endpoint = "localhost:{}/rpc/".format(chunks[1])
+    sidecar_port = config['rpc_server']['main_server']['port']
+    rpc_endpoint = "localhost:{}/rpc/".format(sidecar_port)
     return rpc_endpoint
 
 

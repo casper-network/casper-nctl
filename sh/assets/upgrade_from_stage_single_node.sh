@@ -172,7 +172,6 @@ function _setup_asset_node_configs()
     local PATH_TO_CONFIG
     local PATH_TO_CONFIG_FILE
     local PATH_TO_SIDECAR_CONFIG_FILE
-    local SPECULATIVE_EXEC_ADDR
     local SCRIPT
 
     PATH_TO_NET="$(get_path_to_net)"
@@ -189,7 +188,6 @@ function _setup_asset_node_configs()
     cp "$PATH_TO_NET/chainspec/chainspec.toml" "$PATH_TO_CONFIG"
     cp "$PATH_TO_TEMPLATE" "$PATH_TO_CONFIG_FILE"
 
-    SPECULATIVE_EXEC_ADDR=$(grep 'speculative_exec_server' $PATH_TO_CONFIG_FILE || true)
 
     # Set node configuration settings.
     SCRIPT=(
@@ -216,7 +214,6 @@ function _setup_asset_node_configs()
             SCRIPT+=(
             "cfg=toml.load('$PATH_TO_SIDECAR_CONFIG_FILE');"
             "cfg['rpc_server']['main_server']['address']='0.0.0.0:$(get_node_port_rpc "$NODE_ID")';"
-            "cfg['rpc_server']['speculative_exec_server']['address']='0.0.0.0:$(get_node_port_speculative_exec "$NODE_ID")';"
             "cfg['rpc_server']['node_client']['address']='0.0.0.0:$(get_node_port_binary "$NODE_ID")';"
             "toml.dump(cfg, open('$PATH_TO_SIDECAR_CONFIG_FILE', 'w'));"
         )
