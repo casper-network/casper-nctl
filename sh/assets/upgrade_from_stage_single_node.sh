@@ -213,8 +213,10 @@ function _setup_asset_node_configs()
 
             SCRIPT+=(
             "cfg=toml.load('$PATH_TO_SIDECAR_CONFIG_FILE');"
-            "cfg['rpc_server']['main_server']['address']='0.0.0.0:$(get_node_port_rpc "$NODE_ID")';"
-            "cfg['rpc_server']['node_client']['address']='0.0.0.0:$(get_node_port_binary "$NODE_ID")';"
+            "cfg['rpc_server']['main_server']['ip_address']='0.0.0.0';"
+            "cfg['rpc_server']['main_server']['port']=$(get_node_port_rpc "$NODE_ID");"
+            "cfg['rpc_server']['node_client']['ip_address']='0.0.0.0';"
+            "cfg['rpc_server']['node_client']['port']=$(get_node_port_binary "$NODE_ID");"
             "toml.dump(cfg, open('$PATH_TO_SIDECAR_CONFIG_FILE', 'w'));"
         )
     fi
