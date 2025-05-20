@@ -403,7 +403,6 @@ function setup_asset_node_configs()
     local PATH_TO_CONFIG_FILE
     local PATH_TO_SIDECAR_CONFIG_FILE
     local SCRIPT
-    local SPECULATIVE_EXEC_ADDR
 
     PATH_TO_NET="$(get_path_to_net)"
 
@@ -448,13 +447,6 @@ function setup_asset_node_configs()
             )
         fi
 
-        SPECULATIVE_EXEC_ADDR=$(grep 'speculative_exec_server' $PATH_TO_CONFIG_FILE || true)
-        if [ ! -z "$SPECULATIVE_EXEC_ADDR" ]; then
-            SCRIPT+=(
-                "cfg['speculative_exec_server']['address']='0.0.0.0:$(get_node_port_speculative_exec "$IDX")';"
-            )
-        fi
-
         SCRIPT+=(
             "toml.dump(cfg, open('$PATH_TO_CONFIG_FILE', 'w'));"
         )
@@ -467,8 +459,6 @@ function setup_asset_node_configs()
                 "cfg=toml.load('$PATH_TO_SIDECAR_CONFIG_FILE');"
                 "cfg['rpc_server']['main_server']['ip_address']='0.0.0.0';"
                 "cfg['rpc_server']['main_server']['port']=$(get_node_port_rpc "$IDX");"
-                "cfg['rpc_server']['speculative_exec_server']['ip_address']='0.0.0.0';"
-                "cfg['rpc_server']['speculative_exec_server']['port']=$(get_node_port_speculative_exec "$IDX");"
                 "cfg['rpc_server']['node_client']['ip_address']='0.0.0.0';"
                 "cfg['rpc_server']['node_client']['port']=$(get_node_port_binary "$IDX");"
                 "toml.dump(cfg, open('$PATH_TO_SIDECAR_CONFIG_FILE', 'w'));"
