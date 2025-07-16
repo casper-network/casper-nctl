@@ -13,24 +13,34 @@ do
         *)
     esac
 done
-
 # ----------------------------------------------------------------
 # MAIN
 # ----------------------------------------------------------------
 
 source "$NCTL"/sh/utils/main.sh
 
+
 NODE_ADDRESS=$(get_node_address_rpc)
 STATE_ROOT_HASH=${STATE_ROOT_HASH:-$(get_state_root_hash)}
+local ADDRESSABLE_ENTITY_ENABLED=${3:-false}
 
-ADDRESSABLE_ENTITY=$($(get_path_to_client) query-global-state \
-    --node-address "$NODE_ADDRESS" \
-    --state-root-hash "$STATE_ROOT_HASH" \
-    --key "$ACCOUNT_KEY" \
-     | jq -r '.result.stored_value.CLValue.parsed')
+if [ "$ADDRESSABLE_ENTITY_ENABLED" = "true" ]; 
+then
+    ADDRESSABLE_ENTITY=$($(get_path_to_client) query-global-state \
+        --node-address "$NODE_ADDRESS" \
+        --state-root-hash "$STATE_ROOT_HASH" \
+        --key "$ACCOUNT_KEY" \
+         | jq -r '.result.stored_value.CLValue.parsed')
 
-$(get_path_to_client) query-global-state \
-    --node-address "$NODE_ADDRESS" \
-    --state-root-hash "$STATE_ROOT_HASH" \
-    --key "$ADDRESSABLE_ENTITY" \
-    | jq -r '.result'
+    $(get_path_to_client) query-global-state \
+         --node-address "$NODE_ADDRESS" \
+         --state-root-hash "$STATE_ROOT_HASH" \
+         --key "$ADDRESSABLE_ENTITY" \
+         | jq -r '.result'
+else
+    $(get_path_to_client) query-global-state \
+        --node-address "$NODE_ADDRESS" \
+        --state-root-hash "$STATE_ROOT_HASH" \
+        --key "$ACCOUNT_KEY" \
+        | jq '.result'
+fi
