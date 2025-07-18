@@ -10,6 +10,7 @@ do
     case "$KEY" in
         account-key) ACCOUNT_KEY=${VALUE} ;;
         root-hash) STATE_ROOT_HASH=${VALUE} ;;
+        addressable-entity-enabled) ADDRESSABLE_ENTITY_ENABLED=${VALUE} ;;
         *)
     esac
 done
@@ -42,5 +43,5 @@ else
         --node-address "$NODE_ADDRESS" \
         --state-root-hash "$STATE_ROOT_HASH" \
         --key "$ACCOUNT_KEY" \
-        | jq '.result'
+        | jq -r '.result'
 fi

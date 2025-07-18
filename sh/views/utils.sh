@@ -22,7 +22,8 @@ function render_account()
 
     source "$NCTL"/sh/views/view_chain_account.sh \
         root-hash="$STATE_ROOT_HASH" \
-        account-key="$ACCOUNT_KEY"
+        account-key="$ACCOUNT_KEY" \
+        addressable-entity-enabled="$ADDRESSABLE_ENTITY_ENABLED"
 }
 
 #######################################
