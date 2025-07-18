@@ -114,5 +114,5 @@ function get_main_purse_uref()
        QUERY='.stored_value.Account.main_purse'
     fi
     
-    source "$NCTL"/sh/views/view_chain_account.sh account-key="$ACCOUNT_KEY" root-hash="$STATE_ROOT_HASH" | jq $QUERY | sed -e 's/^"//' -e 's/"$//'
+    source "$NCTL"/sh/views/view_chain_account.sh account-key="$ACCOUNT_KEY" root-hash="$STATE_ROOT_HASH" | jq "$QUERY" | sed -e 's/^"//' -e 's/"$//'
 }
