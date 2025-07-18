@@ -7,11 +7,13 @@
 # Arguments:
 #   Account type (node | user | faucet).
 #   Account ordinal identifier (optional).
+#   Optional flag determining if addressable entity is turned on
 #######################################
 function render_account()
 {
     local ACCOUNT_TYPE=${1}
-    local ACCOUNT_IDX=${2}   
+    local ACCOUNT_IDX=${2}
+    local ADDRESSABLE_ENTITY_ENABLED=${3:-false}
     local ACCOUNT_KEY
     local STATE_ROOT_HASH
 
@@ -20,7 +22,8 @@ function render_account()
 
     source "$NCTL"/sh/views/view_chain_account.sh \
         root-hash="$STATE_ROOT_HASH" \
-        account-key="$ACCOUNT_KEY"
+        account-key="$ACCOUNT_KEY" \
+        addressable-entity-enabled="$ADDRESSABLE_ENTITY_ENABLED"
 }
 
 #######################################

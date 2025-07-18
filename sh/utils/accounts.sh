@@ -99,15 +99,20 @@ function get_account_prefix()
 # Arguments:
 #   Account key.
 #   State root hash.
+#   optional flag determining if addressable entity is turned on
 #######################################
 function get_main_purse_uref()
 {
     local ACCOUNT_KEY=${1}
     local STATE_ROOT_HASH=${2:-$(get_state_root_hash)}
+    local ADDRESSABLE_ENTITY_ENABLED=${3:-false}
 
-    source "$NCTL"/sh/views/view_chain_account.sh \
-        account-key="$ACCOUNT_KEY" \
-        root-hash="$STATE_ROOT_HASH" \
-        | jq '.stored_value.AddressableEntity.main_purse' \
-        | sed -e 's/^"//' -e 's/"$//'
+    if [ "$ADDRESSABLE_ENTITY_ENABLED" = "true" ]; 
+    then
+       QUERY='.stored_value.AddressableEntity.main_purse'
+    else
+       QUERY='.stored_value.Account.main_purse'
+    fi
+    
+    source "$NCTL"/sh/views/view_chain_account.sh account-key="$ACCOUNT_KEY" root-hash="$STATE_ROOT_HASH" | jq "$QUERY" | sed -e 's/^"//' -e 's/"$//'
 }
