@@ -46,17 +46,18 @@ function main()
     log "... amount = $AMOUNT"
 
     DEPLOY_HASH=$(
-        $PATH_TO_CLIENT put-deploy \
+        $PATH_TO_CLIENT put-transaction delegate\
             --chain-name "$CHAIN_NAME" \
             --node-address "$NODE_ADDRESS" \
-            --payment-amount "$GAS_PAYMENT" \
             --ttl "5minutes" \
             --secret-key "$DELEGATOR_SECRET_KEY" \
-            --session-arg "$(get_cl_arg_u512 'amount' "$AMOUNT")" \
-            --session-arg "$(get_cl_arg_account_key 'delegator' "$DELEGATOR_ACCOUNT_KEY")" \
-            --session-arg "$(get_cl_arg_account_key 'validator' "$VALIDATOR_ACCOUNT_KEY")" \
-            --session-path "$PATH_TO_CONTRACT" \
-            | jq '.result.deploy_hash' \
+            --transaction-amount 500000000000 \
+            --delegator "$DELEGATOR_ACCOUNT_KEY" \
+            --validator "$VALIDATOR_ACCOUNT_KEY" \
+            --gas-price-tolerance 2 \
+            --standard-payment true \
+            --payment-amount 3000000000 \
+            | jq '.result.transaction_hash.Version1' \
             | sed -e 's/^"//' -e 's/"$//'
         )
 
