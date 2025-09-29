@@ -51,12 +51,12 @@ function main()
             --node-address "$NODE_ADDRESS" \
             --ttl "5minutes" \
             --secret-key "$DELEGATOR_SECRET_KEY" \
-            --transaction-amount 500000000000 \
+            --transaction-amount "$AMOUNT" \
             --delegator "$DELEGATOR_ACCOUNT_KEY" \
             --validator "$VALIDATOR_ACCOUNT_KEY" \
             --gas-price-tolerance 2 \
             --standard-payment true \
-            --payment-amount 3000000000 \
+            --payment-amount "$GAS_PAYMENT" \
             | jq '.result.transaction_hash.Version1' \
             | sed -e 's/^"//' -e 's/"$//'
         )
