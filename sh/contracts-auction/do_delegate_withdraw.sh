@@ -54,7 +54,7 @@ function main()
             --transaction-amount "$AMOUNT" \
             --delegator "$DELEGATOR_ACCOUNT_KEY" \
             --validator "$VALIDATOR_ACCOUNT_KEY" \
-            --gas-price-tolerance 2 \
+            --gas-price-tolerance 1 \
             --standard-payment true \
             | jq '.result.transaction_hash.Version1' \
             | sed -e 's/^"//' -e 's/"$//'
