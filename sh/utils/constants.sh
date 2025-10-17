@@ -49,6 +49,10 @@ export NCTL_CONTRACTS_CLIENT_TRANSFERS=(
 # Default amount used when delegating.
 export NCTL_DEFAULT_AUCTION_DELEGATE_AMOUNT=1000000000   # (1e9)
 
+# Default amount to withdraw
+export NCTL_DEFAULT_AUCTION_BID_WITHDRAW_AMOUNT=1000000000   # (1e9)
+
+
 # Default era offset to apply when activating an upgrade.
 export NCTL_DEFAULT_ERA_ACTIVATION_OFFSET=2
 
