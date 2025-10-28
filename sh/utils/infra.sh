@@ -266,6 +266,19 @@ function get_node_staking_weight()
 }
 
 #######################################
+# Calculates a node's default withdraw amount.
+# Arguments:
+#   Node ordinal identifier.
+#######################################
+function get_node_default_bid_withdraw_amount()
+{
+    local NODE_ID=${1}
+
+    echo $((NCTL_DEFAULT_AUCTION_BID_WITHDRAW_AMOUNT + NODE_ID))
+}
+
+
+#######################################
 # Returns set of nodes within a process group.
 # Arguments:
 #   Process group identifier.
