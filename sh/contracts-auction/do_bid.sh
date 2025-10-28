@@ -21,7 +21,6 @@ function main()
     local GAS_PAYMENT
     local NODE_ADDRESS
     local PATH_TO_CLIENT
-    local PATH_TO_CONTRACT
     local BIDDER_ACCOUNT_KEY
     local BIDDER_SECRET_KEY
 
@@ -29,13 +28,12 @@ function main()
     GAS_PAYMENT=${GAS_PAYMENT:-$NCTL_DEFAULT_GAS_PAYMENT}
     NODE_ADDRESS=$(get_node_address_rpc)
     PATH_TO_CLIENT=$(get_path_to_client)
-    PATH_TO_CONTRACT=$(get_path_to_contract "auction/add_bid.wasm")
 
     BIDDER_ACCOUNT_KEY=$(get_account_key "$NCTL_ACCOUNT_TYPE_NODE" "$BIDDER_ID" | tr '[:upper:]' '[:lower:]')
     BIDDER_SECRET_KEY=$(get_path_to_secret_key "$NCTL_ACCOUNT_TYPE_NODE" "$BIDDER_ID")
 
     if [ "$QUIET" != "TRUE" ]; then
-        log "dispatching deploy -> add_bid.wasm"
+        log "dispatching transaction"
         log "... chain = $CHAIN_NAME"
         log "... dispatch node = $NODE_ADDRESS"
         log "... contract = $PATH_TO_CONTRACT"
@@ -45,24 +43,26 @@ function main()
         log "... bid delegation rate = $BID_DELEGATION_RATE"
     fi
 
-    DEPLOY_HASH=$(
-        $PATH_TO_CLIENT put-deploy \
+    TRANSACTION_HASH=$(
+        $PATH_TO_CLIENT put-transaction add-bid \
             --chain-name "$CHAIN_NAME" \
             --node-address "$NODE_ADDRESS" \
             --payment-amount "$GAS_PAYMENT" \
             --ttl "5min" \
             --secret-key "$BIDDER_SECRET_KEY" \
-            --session-arg "$(get_cl_arg_account_key 'public_key' "$BIDDER_ACCOUNT_KEY")" \
-            --session-arg "$(get_cl_arg_u512 'amount' "$BID_AMOUNT")" \
-            --session-arg "$(get_cl_arg_u8 'delegation_rate' "$BID_DELEGATION_RATE")" \
-            --session-path "$PATH_TO_CONTRACT" \
-            | jq '.result.deploy_hash' \
+            --public-key "$BIDDER_ACCOUNT_KEY" \
+            --transaction-amount "$BID_AMOUNT" \
+            --delegation-rate "$BID_DELEGATION_RATE" \
+            --gas-price-tolerance 1 \
+            --standard-payment true \
+            | jq '.result.transaction_hash.Version1' \
             | sed -e 's/^"//' -e 's/"$//'
         )
-
+        
+        
     if [ "$QUIET" != "TRUE" ]; then
-        log "deploy dispatched:"
-        log "... deploy hash = $DEPLOY_HASH"
+        log "transaction dispatched:"
+        log "... transaction hash = $TRANSACTION_HASH"
     fi
 }
 
