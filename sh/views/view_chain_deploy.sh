@@ -3,23 +3,29 @@
 source "$NCTL"/sh/utils/main.sh
 
 #######################################
-# Renders on-chain deploy information.
+# Displays on-chain deploy information.
 # Arguments:
-#   Deploy hash.
+#   Deploy hash 
+#   If no deploys are found or no deploy hash provided, prints a message.
 #######################################
 function main()
 {
-    local DEPLOY_HASH=${1}
-
-    $(get_path_to_client) get-deploy \
-        --node-address "$(get_node_address_rpc)" \
-        "$DEPLOY_HASH" \
-        | jq '.result'
+    if [ -n "$DEPLOY_HASH" ]; then
+        # If a specific deploy hash is provided, show only that deploy
+        $(get_path_to_client) get-deploy \
+            --node-address "$(get_node_address_rpc)" \
+            "$DEPLOY_HASH"
+    else
+        # No deploy hash provided:
+        echo "no deploy hash provided, please provide a deploy hash to get the deploy information"
+    fi
 }
 
 # ----------------------------------------------------------------
 # ENTRY POINT
 # ----------------------------------------------------------------
+
+DEPLOY_HASH=""
 
 for ARGUMENT in "$@"
 do
@@ -28,7 +34,10 @@ do
     case "$KEY" in
         deploy) DEPLOY_HASH=${VALUE} ;;
         *)
+            # Ignore other arguments
+            ;;
     esac
 done
 
 main "$DEPLOY_HASH"
+
